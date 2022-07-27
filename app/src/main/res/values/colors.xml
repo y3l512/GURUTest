@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="skyblue">#4FAAFF</color> //테마색
+    <color name="blue">#2780D3</color> //진파랑
+    <color name="yellow">#ffc14a</color> //포인트컬러
+    <color name="font_black">#1f1f1f</color> //폰트색상
 </resources>

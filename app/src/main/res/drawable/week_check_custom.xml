@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    // 새알바 등록화면 요일 체크 버튼
+<item android:state_checked="true"
+    android:drawable="@drawable/ic_baseline_check_circle_24"/>
+
+    <item android:state_checked="false"
+        android:drawable="@drawable/ic_baseline_radio_button_unchecked_24"/>
+</selector>

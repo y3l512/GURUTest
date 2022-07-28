@@ -16,7 +16,7 @@ import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
-
+//알바 목록화면
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         btn_newjob.setOnClickListener{
             startActivity(Intent(this, NewJob::class.java))
         }
+
+
+
 
         naviView.setNavigationItemSelectedListener(this)
 

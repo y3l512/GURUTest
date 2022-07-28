@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    //calculator2의 계산하기 버튼
     <solid android:color="@color/skyblue"/>
     <corners android:radius="10dp"/>
-
 </shape>

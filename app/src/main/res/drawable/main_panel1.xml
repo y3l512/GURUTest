@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    //알바 목록 화면의 패널
     <solid android:color="@color/skyblue"/>
     <corners android:radius="15dp"/>
 </shape>

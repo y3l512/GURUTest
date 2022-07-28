@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    //calculator(계산기 결과 화면)의 버튼 디자인
     <solid android:color="@color/skyblue"/>
     <corners android:radius="15dp"/>
 </shape>

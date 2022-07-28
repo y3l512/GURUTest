@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".Calculator">
 
+//계산 결과 화면
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -100,7 +101,7 @@
         app:layout_constraintHorizontal_bias="0.556"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
-        app:srcCompat="@drawable/biber_stand" />
+        app:srcCompat="@drawable/biber_calcu" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"

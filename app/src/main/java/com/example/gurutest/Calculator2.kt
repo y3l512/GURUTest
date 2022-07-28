@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.calculator2.*
 import kotlinx.android.synthetic.main.newjob.*
 import kotlinx.android.synthetic.main.newjob.btn_back
-
+//계산 전
 class Calculator2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -26,8 +26,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
 
 
-
-
+        // 근무 스톱워치 실행
+        btn_gowork1.setOnClickListener {
+            var intent = Intent(this, StopWatchActivity::class.java)
+            startActivity(intent)
+        }
+        btn_gowork2.setOnClickListener {
+            var intent = Intent(this, StopWatchActivity::class.java)
+            startActivity(intent)
+        }
 
 
         //햄버거 메뉴 클릭

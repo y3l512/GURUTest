@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/dlgbackBtn"
+        android:layout_width="45dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_baseline_arrow_back_24"
+        android:backgroundTint="#858585"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layoutInDialog1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/hourEdt1_1"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시"
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/minEdt1_1"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  ~  "
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/hourEdt1_2"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시"
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/minEdt1_2"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분"
+                    android:textSize="23sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/updatebtn1"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="7dp"
+                    android:text="수정" />
+
+                <android.widget.Button
+                    android:id="@+id/deletebtn1"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/button_stroke"
+                    android:text="삭제" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutInDialog2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/hourEdt2_1"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시"
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/minEdt2_1"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  ~  "
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/hourEdt2_2"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시"
+                    android:textSize="23sp" />
+
+                <EditText
+                    android:id="@+id/minEdt2_2"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분"
+                    android:textSize="23sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/updatebtn2"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="7dp"
+                    android:text="수정" />
+
+                <android.widget.Button
+                    android:id="@+id/deletebtn2"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/button_stroke"
+                    android:text="삭제" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

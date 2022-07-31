@@ -16,12 +16,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <android.widget.Button
             android:id="@+id/dlgbackBtn"
             android:layout_width="23dp"
             android:layout_height="23dp"
-            android:layout_marginLeft="1dp"
-            android:src="@drawable/ic_baseline_arrow_back_ios_new_24" />
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,7 +34,6 @@
 
 
     </androidx.appcompat.widget.Toolbar>
-
 
 
     <LinearLayout
@@ -140,6 +140,15 @@
                 android:layout_marginRight="20dp"
                 android:gravity="right"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dayWage1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0원"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/skyblue" />
 
                 <Button
                     android:id="@+id/updatebtn1"
@@ -256,6 +265,15 @@
                 android:layout_marginRight="20dp"
                 android:gravity="right"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dayWage2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0원"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/skyblue" />
 
                 <Button
                     android:id="@+id/updatebtn2"

@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var lay_panel2: LinearLayout
     lateinit var btn_delete1: ImageButton
     lateinit var btn_delete2: ImageButton
+    lateinit var work_totalWage1: TextView
+    lateinit var work_totalWage2: TextView
 
     private var t_workname1 = ""
     private var t_workname2 = ""
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lay_panel2 = findViewById(R.id.lay_panel2)
         btn_delete1 = findViewById(R.id.btn_delete1)
         btn_delete2 = findViewById(R.id.btn_delete2)
+        work_totalWage1 = findViewById(R.id.work_totalWage1)
+        work_totalWage2 = findViewById(R.id.work_totalWage2)
 
         lay_panel1.visibility = View.INVISIBLE
         lay_panel2.visibility = View.INVISIBLE
@@ -122,9 +126,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         while(cursor.moveToNext()){
             totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
         }
-
         mainWageTv.text = totalWage.toString()
 
+        // 알바 패널에 정보 표시
         cursor = sqlitedb.rawQuery("SELECT * FROM workTBL;", null)
 
         var i =0
@@ -148,6 +152,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         i=0
 
+        // 근무지별 이번 달 총액 표시
+        var work_totalWage = 0
+
+        // 첫번째 근무지 총액
+        cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE yearMonth = '" + str + "' AND name = '" + tv_workname1.text.toString() + "';", null)
+        while(cursor.moveToNext()){
+            work_totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
+        }
+
+        // 텍스트뷰 변경
+        work_totalWage1.text = "$work_totalWage" + "원"
+        // 초기화
+        work_totalWage = 0
+
+        // 두번째 근무지 총액
+        cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE yearMonth = '" + str + "' AND name = '" + tv_workname2.text.toString() + "';", null)
+        while(cursor.moveToNext()){
+            work_totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
+        }
+
+        // 텍스트뷰 변경
+        work_totalWage2.text = "$work_totalWage" + "원"
+        // 초기화
+        work_totalWage = 0
 
         cursor.close()
         sqlitedb.close()

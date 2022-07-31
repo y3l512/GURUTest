@@ -121,8 +121,6 @@ class DialogActivity : AppCompatActivity() {
         nameTv1.text = workName1
         nameTv2.text = workName2
 
-        Toast.makeText(applicationContext, "updateStartTime1: $updateStartTime1", Toast.LENGTH_SHORT).show()
-        Toast.makeText(applicationContext, "updateStartTime2: $updateStartTime2", Toast.LENGTH_SHORT).show()
         // 근무지 급여 바꾸기(하루 단위)
         if(updateStartTime1 != ""){
             dayWageTv1.text = "" + dayWage(workWage1, updateStartTime1, updateEndTime1, updateStartMin301, updateEndMin301) + "원"

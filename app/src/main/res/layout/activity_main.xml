@@ -113,7 +113,7 @@
             android:layout_marginBottom="28dp"
             android:layout_marginEnd="28dp"
             android:clickable="true"
-            app:backgroundTint="@color/yellow"
+            app:backgroundTint="#F6AE46"
             app:fabCustomSize="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -6,9 +6,6 @@
         <item android:id="@+id/calculator"
             android:title="시급 계산기" />
 
-        <item android:id="@+id/widgetsetting"
-            android:title="위젯 설정" />
-
 
 
     </group>

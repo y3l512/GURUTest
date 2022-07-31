@@ -216,7 +216,10 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             startActivity(Intent(this, MainActivity::class.java))
         }
 
+        naviView1.setNavigationItemSelectedListener(this)
+
     }
+
 
     //햄버거 메뉴의 메뉴들 클릭 시
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -224,8 +227,8 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         {
             //시급 계산기로
             R.id.calculator-> startActivity(Intent(this, Calculator2::class.java))
-            //새알바 등록
-            R.id.widgetsetting-> Toast.makeText(applicationContext,"위젯설정으로 이동", Toast.LENGTH_SHORT).show()
+
+
         }
         layout_drawer.closeDrawers()
         return false

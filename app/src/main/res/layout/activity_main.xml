@@ -113,7 +113,7 @@
             android:layout_marginBottom="28dp"
             android:layout_marginEnd="28dp"
             android:clickable="true"
-            app:backgroundTint="@color/yellow"
+            app:backgroundTint="#F6AE46"
             app:fabCustomSize="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -221,7 +221,7 @@
                         android:layout_marginLeft="6dp"
                         android:background="@drawable/main_whitebtn"
                         android:textColor="@color/black"
-                        android:text="수동 입력"
+                        android:text="근무상세"
                         />
 
 
@@ -312,7 +312,7 @@
                             android:layout_marginLeft="6dp"
                             android:background="@drawable/main_whitebtn"
                             android:textColor="@color/black"
-                            android:text="수동 입력"
+                            android:text="근무상세"
                             />
 
 

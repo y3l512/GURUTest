@@ -4,15 +4,21 @@ import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.calculator.*
 import kotlinx.android.synthetic.main.newjob.*
 import kotlinx.android.synthetic.main.newjob.btn_back
+import java.time.format.DateTimeFormatter
 
 //새 알바 등록화면
 class NewJob : AppCompatActivity() {
 
+    lateinit var dbManager: DBManager
+    lateinit var sqlitedb: SQLiteDatabase
 
+    lateinit var et_workname: EditText
+    lateinit var et_wage: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +29,11 @@ class NewJob : AppCompatActivity() {
             finish();
         }
 
-        //테이블 가져오기
+        //DB 가져오기
+        dbManager = DBManager(this, "calDB", null, 1)
 
-
-
+        et_workname = findViewById(R.id.et_workname)
+        et_wage = findViewById(R.id.et_wage)
 
         //근무시간 계산
 
@@ -64,11 +71,16 @@ class NewJob : AppCompatActivity() {
         //등록 완료 (근무지 정보 메인으로 보냄)
         btn_fin.setOnClickListener{
             val workname = et_workname.text.toString()
-            val wage = et_wage.text.toString()
+            val wage = et_wage.text.toString().toInt()
+
+            sqlitedb = dbManager.writableDatabase
+
+            sqlitedb.execSQL("INSERT INTO workTBL VALUES ('" + workname + "', " + wage + ");")
+
+            sqlitedb.close()
+            dbManager.close()
 
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("workname", workname)
-            intent.putExtra("wage", wage)
             startActivity(intent)
 
         }

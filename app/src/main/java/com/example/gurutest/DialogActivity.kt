@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import com.example.gurutest.R
 
 class DialogActivity : AppCompatActivity() {
@@ -26,6 +23,10 @@ class DialogActivity : AppCompatActivity() {
     var updateEndTime2 = ""
     var updateStartMin302 = 0
     var updateEndMin302 = 0
+    var workName1 = ""
+    var workName2 = ""
+    var workWage1 = 0
+    var workWage2 = 0
     var originalWage1 = 0
     var originalWage2 = 0
 
@@ -44,6 +45,8 @@ class DialogActivity : AppCompatActivity() {
     lateinit var deletebtn1 : Button
     lateinit var deletebtn2 : Button
     lateinit var backBtn: Button
+    lateinit var nameTv1 : TextView
+    lateinit var nameTv2 : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +67,11 @@ class DialogActivity : AppCompatActivity() {
         deletebtn1 = findViewById(R.id.deletebtn1)
         deletebtn2 = findViewById(R.id.deletebtn2)
         backBtn = findViewById(R.id.dlgbackBtn)
+        nameTv1 = findViewById(R.id.nameTv1)
+        nameTv2 = findViewById(R.id.nameTv2)
 
         // 레이아웃 초기화
-        layoutInDialog2.visibility = View.INVISIBLE
+        layoutInDialog2.visibility = View.GONE
 
         dbManager = DBManager(this, "calDB", null, 1)
 
@@ -83,6 +88,8 @@ class DialogActivity : AppCompatActivity() {
             // 처음 시간과 두번째 시간을 나눠서 띄움(하루에 알바를 두 개 했을 경우를 대비)
             Toast.makeText(this, "$i", Toast.LENGTH_SHORT).show()
             if(i == 0){
+                workName1 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
+                workWage1 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
                 updateStartTime1 = cursor.getString(cursor.getColumnIndexOrThrow("startTime")).toString()
                 updateEndTime1 = cursor.getString(cursor.getColumnIndexOrThrow("endTime")).toString()
                 updateStartMin301 = cursor.getString(cursor.getColumnIndexOrThrow("startMin30")).toInt()
@@ -90,6 +97,8 @@ class DialogActivity : AppCompatActivity() {
                 originalWage1 = cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
             }else{
                 layoutInDialog2.visibility = View.VISIBLE
+                workName2 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
+                workWage2 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
                 updateStartTime2 = cursor.getString(cursor.getColumnIndexOrThrow("startTime")).toString()
                 updateEndTime2 = cursor.getString(cursor.getColumnIndexOrThrow("endTime")).toString()
                 updateStartMin302 = cursor.getString(cursor.getColumnIndexOrThrow("startMin30")).toInt()
@@ -103,6 +112,10 @@ class DialogActivity : AppCompatActivity() {
         cursor.close()
         sqlitedb.close()
         dbManager.close()
+
+        // 근무지명 바꾸기
+        nameTv1.text = workName1
+        nameTv2.text = workName2
 
         // EditText 힌트 값 바꾸기 (수정 전 시간)
         if(updateStartTime1 == ""){
@@ -133,6 +146,7 @@ class DialogActivity : AppCompatActivity() {
         }else { minEdit2_2.hint = "0" }
 
         updatebtn1.setOnClickListener {
+
             // 에디트 텍스트 값 읽어오기
             updateStartTime1 = hourEdit1_1.text.toString()
             updateEndTime1 = hourEdit1_2.text.toString()
@@ -156,8 +170,18 @@ class DialogActivity : AppCompatActivity() {
             var todayWage = 0
             var workHour = 0
             var workMin = 0
-            // 임시 시급
-            var wage = 10000
+
+            // 시급
+            var hourWage = 0
+            sqlitedb = dbManager.readableDatabase
+            var cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + workName1 + "';", null)
+
+            if(cursor.moveToNext()){
+                hourWage = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
+            }
+
+            cursor.close()
+            sqlitedb.close()
 
             // 시간 계산
             if((updateEndTime1.toInt() - updateStartTime1.toInt()) >= 0){
@@ -177,12 +201,12 @@ class DialogActivity : AppCompatActivity() {
             }
 
             if(workMin == 0){
-                todayWage = workHour * wage
+                todayWage = workHour * hourWage
             }else if(workMin == 30) {
-                todayWage = workHour * wage + wage/2
+                todayWage = workHour * hourWage + hourWage/2
             }else{
                 //workMin == 1
-                todayWage = workHour*wage - wage/2
+                todayWage = workHour*hourWage - hourWage/2
             }
             // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -193,17 +217,19 @@ class DialogActivity : AppCompatActivity() {
             // 키 값이 없어서 같은 날 알바가 두개면 둘 다 삭제될 것이므로 다시 두개 다 입력
             sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
 
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
+            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName1 + "', " + workWage1 + ", '" + str_yearMonthDay
                     + "', '" + str_yearMonth
                     + "', '" + updateStartTime1 + "', '" + updateEndTime1 + "', " + updateStartMin301 + ", " + updateEndMin301 + ", " + todayWage + ");")
             originalWage1 = todayWage
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
+            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName2 + "', " + workWage2 + ", '" + str_yearMonthDay
                     + "', '" + str_yearMonth
                     + "', '" + updateStartTime2 + "', '" + updateEndTime2 + "', " + updateStartMin302 + ", " + updateEndMin302 + ", " + originalWage2 + ");")
 
 
             sqlitedb.close()
             dbManager.close()
+
+            Toast.makeText(applicationContext, "수정되었습니다.", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -232,8 +258,18 @@ class DialogActivity : AppCompatActivity() {
             var todayWage = 0
             var workHour = 0
             var workMin = 0
-            // 임시 시급
-            var wage = 10000
+
+            // 시급
+            var hourWage = 0
+            sqlitedb = dbManager.readableDatabase
+            var cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + workName2 + "';", null)
+
+            if(cursor.moveToNext()){
+                hourWage = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
+            }
+
+            cursor.close()
+            sqlitedb.close()
 
             // 시간 계산
             if((updateEndTime2.toInt() - updateStartTime2.toInt()) >= 0){
@@ -253,12 +289,12 @@ class DialogActivity : AppCompatActivity() {
             }
 
             if(workMin == 0){
-                todayWage = workHour * wage
+                todayWage = workHour * hourWage
             }else if(workMin == 30) {
-                todayWage = workHour * wage + wage/2
+                todayWage = workHour * hourWage + hourWage/2
             }else{
                 //workMin == 1
-                todayWage = workHour*wage - wage/2
+                todayWage = workHour*hourWage - hourWage/2
             }
             // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -272,51 +308,61 @@ class DialogActivity : AppCompatActivity() {
 
             sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
 
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
+            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName1 + "', " + workWage1 + ", '" + str_yearMonthDay
                     + "', '" + str_yearMonth
                     + "', '" + updateStartTime1 + "', '" + updateEndTime1 + "', " + updateStartMin301 + ", " + updateEndMin301 + ", " + originalWage1 + ");")
 
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
+            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName2 + "', " + workWage2 + ", '" + str_yearMonthDay
                     + "', '" + str_yearMonth
                     + "', '" + updateStartTime2 + "', '" + updateEndTime2 + "', " + updateStartMin302 + ", " + updateEndMin302 + ", " + todayWage + ");")
             originalWage2 = todayWage
 
             sqlitedb.close()
             dbManager.close()
+
+            Toast.makeText(applicationContext, "수정되었습니다.", Toast.LENGTH_SHORT).show()
+
         }
 
 
-        deletebtn1.setOnClickListener {
-
-            sqlitedb = dbManager.writableDatabase
-
-            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
-                    + "', '" + str_yearMonth
-                    + "', '" + updateStartTime2 + "', '" + updateEndTime2 + "', " + updateStartMin302 + ", " + updateEndMin302 + ", " + originalWage2 + ");")
-
-
-            sqlitedb.close()
-            dbManager.close()
-
-            layoutInDialog1.visibility = View.INVISIBLE
-        }
-
-
-        deletebtn2.setOnClickListener {
-
-            sqlitedb = dbManager.writableDatabase
-
-            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + str_yearMonthDay
-                    + "', '" + str_yearMonth
-                    + "', '" + updateStartTime1 + "', '" + updateEndTime1 + "', " + updateStartMin301 + ", " + updateEndMin301 + ", " + originalWage1 + ");")
-
-            sqlitedb.close()
-            dbManager.close()
-
-            layoutInDialog2.visibility = View.INVISIBLE
-        }
+//        deletebtn1.setOnClickListener {
+//
+//            sqlitedb = dbManager.writableDatabase
+//
+//            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
+//            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName2 + "', " + workWage2 + ", '" + str_yearMonthDay
+//                    + "', '" + str_yearMonth
+//                    + "', '" + updateStartTime2 + "', '" + updateEndTime2 + "', " + updateStartMin302 + ", " + updateEndMin302 + ", " + originalWage2 + ");")
+//
+//
+//            sqlitedb.close()
+//            dbManager.close()
+//
+//            hourEdit1_1.hint = "00"
+//            hourEdit1_2.hint = "00"
+//            minEdit1_1.hint = "00"
+//            minEdit1_2.hint = "00"
+//
+//            Toast.makeText(applicationContext, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+//            //layoutInDialog1.visibility = View.INVISIBLE
+//        }
+//
+//
+//        deletebtn2.setOnClickListener {
+//
+//            sqlitedb = dbManager.writableDatabase
+//
+//            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
+//            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName1 + "', " + workWage1 + ", '" + str_yearMonthDay
+//                    + "', '" + str_yearMonth
+//                    + "', '" + updateStartTime1 + "', '" + updateEndTime1 + "', " + updateStartMin301 + ", " + updateEndMin301 + ", " + originalWage1 + ");")
+//
+//            sqlitedb.close()
+//            dbManager.close()
+//
+//            Toast.makeText(applicationContext, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+//            //layoutInDialog2.visibility = View.INVISIBLE
+//        }
 
 
         backBtn.setOnClickListener {

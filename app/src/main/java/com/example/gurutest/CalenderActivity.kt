@@ -90,6 +90,13 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         totalWageTv.text = totalWage.toString()
 
+//        cursor = sqlitedb.rawQuery("SELECT * FROM workTBL;", null)
+//
+//        while(cursor.moveToNext()){
+//            Toast.makeText(applicationContext, cursor.getString(cursor.getColumnIndexOrThrow("name")).toString(),Toast.LENGTH_SHORT).show()
+//            Toast.makeText(applicationContext, cursor.getString(cursor.getColumnIndexOrThrow("wage")).toString(),Toast.LENGTH_SHORT).show()
+//        }
+
         cursor.close()
         sqlitedb.close()
         dbManager.close()

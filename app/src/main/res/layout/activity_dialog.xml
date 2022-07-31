@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/dlgbackBtn"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/ic_baseline_arrow_back_24"
+        android:layout_width="30dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_baseline_arrow_back_ios_new_24"
         android:backgroundTint="#858585"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +35,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/nameTv1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="근무지명" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +52,7 @@
                     android:id="@+id/hourEdt1_1"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -59,7 +67,7 @@
                     android:id="@+id/minEdt1_1"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -80,7 +88,7 @@
                     android:id="@+id/hourEdt1_2"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -95,7 +103,7 @@
                     android:id="@+id/minEdt1_2"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -128,7 +136,8 @@
                     android:layout_width="80dp"
                     android:layout_height="30dp"
                     android:background="@drawable/button_stroke"
-                    android:text="삭제" />
+                    android:text="삭제"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -138,9 +147,16 @@
             android:id="@+id/layoutInDialog2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:orientation="vertical"
             android:visibility="visible">
+
+            <TextView
+                android:id="@+id/nameTv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="근무지명" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -152,7 +168,7 @@
                     android:id="@+id/hourEdt2_1"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -167,7 +183,7 @@
                     android:id="@+id/minEdt2_1"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -188,7 +204,7 @@
                     android:id="@+id/hourEdt2_2"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -203,7 +219,7 @@
                     android:id="@+id/minEdt2_2"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="00"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="23sp" />
@@ -236,11 +252,13 @@
                     android:layout_width="80dp"
                     android:layout_height="30dp"
                     android:background="@drawable/button_stroke"
-                    android:text="삭제" />
+                    android:text="삭제"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

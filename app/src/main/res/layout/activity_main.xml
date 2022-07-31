@@ -37,7 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
             <TextView
-                android:id="@+id/editText"
+                android:id="@+id/mainWageTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -168,13 +168,14 @@
 
 
                     //삭제 버튼
+
                     <ImageButton
                         android:id="@+id/btn_delete1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:backgroundTint="#00FFFFFF"
-                        android:src="@drawable/ic_baseline_close_24"
-                        android:layout_marginTop="6dp"/>
+                        android:src="@drawable/ic_baseline_close_24" />
 
 
                 </LinearLayout>

@@ -27,7 +27,7 @@ class StopWatchActivity : AppCompatActivity() {
 
     var totalTime = 0                       // 총 근무시간(급여에 반영)
     private var isRunning = false           // 실행 여부
-    private var time = 0               // 근무 시간
+    private var time = 10000                // 근무 시간
     private var timerTask: Timer? = null
     private var startTime = ""              // 근무 시작 시간
     private var endTime = ""                // 근무 종료 시간
@@ -208,8 +208,18 @@ class StopWatchActivity : AppCompatActivity() {
     // 오늘 임금을 계산하고 DB에 정보를 넣음
     @RequiresApi(Build.VERSION_CODES.O)
     fun todayWage(){
+        // 근무지 이름, 시급 가져오기
+        var name = intent.getStringExtra("name")
+        var hourWage = 0
+
+        sqlitedb = dbManager.writableDatabase
+        var cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + name + "';", null)
+
+        if(cursor.moveToNext()){
+             hourWage = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
+        }
+
         var todayWage = 0
-        var hourWage = 10000  // 임시 시급
 
         // 총 시간이 0.5시간(30분)으로 떨어지는 경우와 아닌 경우를 나눔
         if(totalTime%60 == 0){
@@ -222,8 +232,8 @@ class StopWatchActivity : AppCompatActivity() {
             // 오늘 날짜
             var todayDate: LocalDate = LocalDate.now()
             // DB에 정보 입력
-            sqlitedb = dbManager.writableDatabase
-            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + todayDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + name + "', " + hourWage + ", '"
+                    + todayDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
                     + "', '" + todayDate.format(DateTimeFormatter.ofPattern("yyyyMM")).toString()
                     + "', '" + startTime + "', '" + endTime + "', " + startMin30 + ", " + endMin30 + ", " + todayWage + ");")
 

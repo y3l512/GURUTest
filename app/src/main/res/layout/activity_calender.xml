@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/img_biber"
-            android:layout_width="113dp"
-            android:layout_height="161dp"
+            android:layout_width="138dp"
+            android:layout_height="187dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="-5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,14 +111,15 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="407dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginBottom="40dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_biber">
+            app:layout_constraintTop_toBottomOf="@+id/img_biber"
+            app:layout_constraintVertical_bias="0.25">
 
             <CalendarView
                 android:id="@+id/calendarView"
@@ -131,7 +132,7 @@
         <LinearLayout
             android:id="@+id/layout"
             android:layout_width="437dp"
-            android:layout_height="98dp"
+            android:layout_height="120dp"
             android:background="@color/blue"
             android:orientation="horizontal"
             android:paddingLeft="40dp"
@@ -144,8 +145,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.9"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:paddingTop="22dp"
                 android:paddingBottom="22dp">
 
@@ -158,42 +159,43 @@
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:paddingLeft="5dp"-->
-<!--                    android:paddingRight="5dp">-->
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:paddingLeft="5dp"-->
+                <!--                    android:paddingRight="5dp">-->
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/timeTv"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="center"-->
-<!--                        android:text="00시 - 00시"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="13sp" />-->
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/timeTv"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="0dp"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:text="00시 - 00시"-->
+                <!--                        android:textColor="@color/white"-->
+                <!--                        android:textSize="13sp" />-->
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/timeTv2"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="center"-->
-<!--                        android:text="00시 - 00시"-->
-<!--                        android:visibility="gone"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="13sp" />-->
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/timeTv2"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="0dp"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        android:gravity="center"-->
+                <!--                        android:text="00시 - 00시"-->
+                <!--                        android:visibility="gone"-->
+                <!--                        android:textColor="@color/white"-->
+                <!--                        android:textSize="13sp" />-->
 
-<!--                </LinearLayout>-->
+                <!--                </LinearLayout>-->
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="86dp"
                 android:layout_weight="1.1"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:paddingTop="30dp">
 
@@ -201,9 +203,8 @@
                     android:id="@+id/dayWageTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
                     android:text="0원"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="25dp"
                     android:textStyle="bold|italic" />
@@ -214,8 +215,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <android.widget.Button
                     android:id="@+id/updateBtn"

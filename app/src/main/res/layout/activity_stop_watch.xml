@@ -106,11 +106,11 @@
 
     <Button
         android:id="@+id/backBtn"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/ic_baseline_arrow_back_24"
+        android:layout_width="29dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_baseline_arrow_back_ios_new_24"
         android:backgroundTint="#858585"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"

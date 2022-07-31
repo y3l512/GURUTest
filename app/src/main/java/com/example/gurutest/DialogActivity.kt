@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import com.example.gurutest.R
 
+// 대화상자로 구현하려다가
 class DialogActivity : AppCompatActivity() {
 
     lateinit var dbManager: DBManager
@@ -47,6 +48,8 @@ class DialogActivity : AppCompatActivity() {
     lateinit var backBtn: Button
     lateinit var nameTv1 : TextView
     lateinit var nameTv2 : TextView
+    lateinit var dayWageTv1 : TextView
+    lateinit var dayWageTv2 : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,8 @@ class DialogActivity : AppCompatActivity() {
         backBtn = findViewById(R.id.dlgbackBtn)
         nameTv1 = findViewById(R.id.nameTv1)
         nameTv2 = findViewById(R.id.nameTv2)
+        dayWageTv1 = findViewById(R.id.dayWage1)
+        dayWageTv2 = findViewById(R.id.dayWage2)
 
         // 레이아웃 초기화
         layoutInDialog2.visibility = View.GONE
@@ -85,8 +90,7 @@ class DialogActivity : AppCompatActivity() {
 
         var i = 0
         while(cursor.moveToNext()){
-            // 처음 시간과 두번째 시간을 나눠서 띄움(하루에 알바를 두 개 했을 경우를 대비)
-            Toast.makeText(this, "$i", Toast.LENGTH_SHORT).show()
+            // DB의 정보를 읽어옴(하루에 최대 알바 2개)
             if(i == 0){
                 workName1 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
                 workWage1 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
@@ -116,6 +120,16 @@ class DialogActivity : AppCompatActivity() {
         // 근무지명 바꾸기
         nameTv1.text = workName1
         nameTv2.text = workName2
+
+        Toast.makeText(applicationContext, "updateStartTime1: $updateStartTime1", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "updateStartTime2: $updateStartTime2", Toast.LENGTH_SHORT).show()
+        // 근무지 급여 바꾸기(하루 단위)
+        if(updateStartTime1 != ""){
+            dayWageTv1.text = "" + dayWage(workWage1, updateStartTime1, updateEndTime1, updateStartMin301, updateEndMin301) + "원"
+        }else{ dayWageTv1.text = "0원" }
+        if(updateStartTime2 != ""){
+            dayWageTv2.text = "" + dayWage(workWage2, updateStartTime2, updateEndTime2, updateStartMin302, updateEndMin302) + "원"
+        }else{ dayWageTv2.text = "0원" }
 
         // EditText 힌트 값 바꾸기 (수정 전 시간)
         if(updateStartTime1 == ""){
@@ -166,52 +180,13 @@ class DialogActivity : AppCompatActivity() {
                 Toast.makeText(this, "분에는 0 또는 30만 들어갈 수 있습니다.", Toast.LENGTH_LONG).show()
             }
 
-            // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓일당 계산↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            var todayWage = 0
-            var workHour = 0
-            var workMin = 0
+            // 일당 계산
+            var todayWage = dayWage(workWage1, updateStartTime1, updateEndTime1, updateStartMin301, updateEndMin301)
 
-            // 시급
-            var hourWage = 0
-            sqlitedb = dbManager.readableDatabase
-            var cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + workName1 + "';", null)
-
-            if(cursor.moveToNext()){
-                hourWage = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
-            }
-
-            cursor.close()
-            sqlitedb.close()
-
-            // 시간 계산
-            if((updateEndTime1.toInt() - updateStartTime1.toInt()) >= 0){
-                workHour = updateEndTime1.toInt() - updateStartTime1.toInt()
-            }else {
-                workHour = (24 - updateStartTime1.toInt()) + updateEndTime1.toInt()
-            }
-
-            // 분 계산
-            if((updateStartMin301 == 1 && updateEndMin301 == 1) || (updateStartMin301 == 0 && updateEndMin301 == 0)){
-                workMin = 0
-            }else if(updateStartMin301 == 0 && updateEndMin301 == 1){
-                workMin = 30
-            }else {
-                // updateStartMin301 == 1 && updateEndMin301 == 0
-                workMin = 1
-            }
-
-            if(workMin == 0){
-                todayWage = workHour * hourWage
-            }else if(workMin == 30) {
-                todayWage = workHour * hourWage + hourWage/2
-            }else{
-                //workMin == 1
-                todayWage = workHour*hourWage - hourWage/2
-            }
-            // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+            // 금액 텍스트 변경
+            dayWageTv1.text = "$todayWage" + "원"
 
             // DB 수정
-            // date String, yearMonth String, startTime String, endTime String, startMin30 INTEGER, endMin30 INTEGER, dayWage INTEGER
             sqlitedb = dbManager.writableDatabase
 
             // 키 값이 없어서 같은 날 알바가 두개면 둘 다 삭제될 것이므로 다시 두개 다 입력
@@ -254,58 +229,16 @@ class DialogActivity : AppCompatActivity() {
                 Toast.makeText(this, "분에는 0 또는 30만 들어갈 수 있습니다.", Toast.LENGTH_LONG).show()
             }
 
-            // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓일당 계산↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            var todayWage = 0
-            var workHour = 0
-            var workMin = 0
+            // 일당 계산
+            var todayWage = dayWage(workWage2, updateStartTime2, updateEndTime2, updateStartMin302, updateEndMin302)
 
-            // 시급
-            var hourWage = 0
-            sqlitedb = dbManager.readableDatabase
-            var cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + workName2 + "';", null)
-
-            if(cursor.moveToNext()){
-                hourWage = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
-            }
-
-            cursor.close()
-            sqlitedb.close()
-
-            // 시간 계산
-            if((updateEndTime2.toInt() - updateStartTime2.toInt()) >= 0){
-                workHour = updateEndTime2.toInt() - updateStartTime2.toInt()
-            }else {
-                workHour = (24 - updateStartTime2.toInt()) + updateEndTime2.toInt()
-            }
-
-            // 분 계산
-            if((updateStartMin302 == 1 && updateEndMin302 == 1) || (updateStartMin302 == 0 && updateEndMin302 == 0)){
-                workMin = 0
-            }else if(updateStartMin302 == 0 && updateEndMin302 == 1){
-                workMin = 30
-            }else {
-                // updateStartMin301 == 1 && updateEndMin301 == 0
-                workMin = 1
-            }
-
-            if(workMin == 0){
-                todayWage = workHour * hourWage
-            }else if(workMin == 30) {
-                todayWage = workHour * hourWage + hourWage/2
-            }else{
-                //workMin == 1
-                todayWage = workHour*hourWage - hourWage/2
-            }
-            // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+            // 금액 텍스트 변경
+            dayWageTv2.text = "$todayWage" + "원"
 
             // DB 수정
-            // date String, yearMonth String, startTime String, endTime String, startMin30 INTEGER, endMin30 INTEGER, dayWage INTEGER
             sqlitedb = dbManager.writableDatabase
 
             // 키 값이 없어서 같은 날 알바가 두개면 둘 다 삭제될 것이므로 다시 두개 다 입력
-//            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "', WHERE startTime = '"
-//                    + startTime1 + "', WHERE endTime = '" + endTime1 +"';")
-
             sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
 
             sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName1 + "', " + workWage1 + ", '" + str_yearMonthDay
@@ -369,5 +302,41 @@ class DialogActivity : AppCompatActivity() {
             var intent = Intent(this, CalenderActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    // 일바 급여 계산 (일당)
+    private fun dayWage(hourWage: Int, updateStartTime: String, updateEndTime: String
+                        , updateStartMin30: Int, updateEndMin30: Int): Int {
+        var todayWage = 0
+        var workHour = 0
+        var workMin = 0
+
+        // 시간 계산
+        if((updateEndTime.toInt() - updateStartTime.toInt()) >= 0){
+            workHour = updateEndTime.toInt() - updateStartTime.toInt()
+        }else {
+            workHour = (24 - updateStartTime.toInt()) + updateEndTime.toInt()
+        }
+
+        // 분 계산
+        if((updateStartMin30 == 1 && updateEndMin30 == 1) || (updateStartMin30 == 0 && updateEndMin30 == 0)){
+            workMin = 0
+        }else if(updateStartMin30 == 0 && updateEndMin30 == 1){
+            workMin = 30
+        }else {
+            // updateStartMin301 == 1 && updateEndMin301 == 0
+            workMin = 1
+        }
+
+        if(workMin == 0){
+            todayWage = workHour * hourWage
+        }else if(workMin == 30) {
+            todayWage = workHour * hourWage + hourWage/2
+        }else{
+            //workMin == 1
+            todayWage = workHour*hourWage - hourWage/2
+        }
+
+        return todayWage
     }
 }

@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 //알바 목록화면
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var dbManager: DBManager
+    lateinit var sqlitedb: SQLiteDatabase
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
+        btn_calendar.setOnClickListener{
+            startActivity(Intent(this, CalenderActivity::class.java))
+        }
+
+
+
 
 
         naviView.setNavigationItemSelectedListener(this)
@@ -58,17 +67,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val ab = supportActionBar!!
         ab.setDisplayShowTitleEnabled(false)
 
+        dbManager = DBManager(this, "workDB", null, 1)
+        sqlitedb = dbManager.readableDatabase
+
+
         //새 알바에서 근무지를 등록했을때 항목이 추가됨
         if(intent.hasExtra("workname")){
             //근무지 이름 가져오기
-            val workname = intent.getStringExtra("workname")
+            val str_workname = intent.getStringExtra("workname")
+            val str_wage = intent.getStringExtra("wage")
 
-            //근무지 이름 출력
-            tv_workname1.text = workname
-            //알바 패널 보이게
-            lay_panel1.visibility=View.VISIBLE
+            var cursor: Cursor = sqlitedb.rawQuery("SELECT * FROM workTBL WHERE name = '" + str_workname + "';", null)
 
+            var i =0
+
+            while(cursor.moveToNext()){
+                if(i==0){
+                   var t_workname1 = cursor.getString(cursor.getColumnIndexOrThrow("str_workname")).toString()
+                    tv_workname1.text = t_workname1
+                    var t_wage1 = cursor.getString(cursor.getColumnIndexOrThrow("str_wage")).toString()
+                    //알바 패널 보이게
+                    lay_panel1.visibility=View.VISIBLE
+
+
+                }else{
+                    var t_workname2 = cursor.getString(cursor.getColumnIndexOrThrow("str_workname")).toString()
+                    tv_workname2.text = t_workname2
+                    var t_wage2 = cursor.getString(cursor.getColumnIndexOrThrow("str_wage")).toString()
+                    lay_panel2.visibility=View.VISIBLE
+                }
+                i++
+
+            }
+            i=0
+
+
+            cursor.close()
+            sqlitedb.close()
+            dbManager.close()
         }
+
+
 
 
 

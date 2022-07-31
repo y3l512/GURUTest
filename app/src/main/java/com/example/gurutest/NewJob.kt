@@ -1,6 +1,8 @@
 package com.example.gurutest
 
 import android.content.Intent
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.calculator.*
@@ -9,6 +11,9 @@ import kotlinx.android.synthetic.main.newjob.btn_back
 
 //새 알바 등록화면
 class NewJob : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.newjob)
@@ -17,6 +22,10 @@ class NewJob : AppCompatActivity() {
         btn_back.setOnClickListener{
             finish();
         }
+
+        //테이블 가져오기
+
+
 
 
         //근무시간 계산
@@ -55,9 +64,11 @@ class NewJob : AppCompatActivity() {
         //등록 완료 (근무지 정보 메인으로 보냄)
         btn_fin.setOnClickListener{
             val workname = et_workname.text.toString()
+            val wage = et_wage.text.toString()
 
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("workname", workname)
+            intent.putExtra("wage", wage)
             startActivity(intent)
 
         }

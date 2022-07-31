@@ -7,14 +7,21 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
 import com.example.gurutest.R
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_calender.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.btn_navi
+import kotlinx.android.synthetic.main.activity_main.layout_drawer
 import java.time.LocalDate
 
-class CalenderActivity : AppCompatActivity() {
+class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
 
     lateinit var dbManager: DBManager
     lateinit var sqlitedb: SQLiteDatabase
@@ -193,5 +200,38 @@ class CalenderActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        btn_navi.setOnClickListener{
+            layout_drawer.openDrawer(GravityCompat.END)
+        }
+
+        btn_main.setOnClickListener{
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
     }
+
+    //햄버거 메뉴의 메뉴들 클릭 시
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            //시급 계산기로
+            R.id.calculator-> startActivity(Intent(this, Calculator2::class.java))
+            //새알바 등록
+            R.id.widgetsetting-> Toast.makeText(applicationContext,"위젯설정으로 이동", Toast.LENGTH_SHORT).show()
+        }
+        layout_drawer.closeDrawers()
+        return false
+    }
+
+    //햄버거 메뉴를 클릭한 후 하단 뒤로가기를 눌렀을 때 앱이 종료되지 않고 메인으로 돌아가게함
+    override fun onBackPressed() {
+        if (layout_drawer.isDrawerOpen(GravityCompat.END)) {
+            layout_drawer.closeDrawers()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+
 }

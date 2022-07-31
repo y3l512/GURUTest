@@ -88,12 +88,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/btn_calendar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_calendar_month_24"
+                android:layout_marginLeft="310dp"/>
+
            <ImageView
                android:id="@+id/btn_navi"
                android:layout_width="30dp"
                android:layout_height="30dp"
                android:src="@drawable/ic_baseline_dehaze_24"
-               android:layout_marginLeft="360dp"/>
+               android:layout_marginLeft="18dp"/>
 
 
 

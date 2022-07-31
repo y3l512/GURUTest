@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".CalenderActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -89,12 +89,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-           <ImageView
+            <ImageView
+                android:id="@+id/btn_main"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_ballot_24"
+                android:layout_marginLeft="310dp"/>
+
+
+            <ImageView
                android:id="@+id/btn_navi"
                android:layout_width="30dp"
                android:layout_height="30dp"
                android:src="@drawable/ic_baseline_dehaze_24"
-               android:layout_marginLeft="360dp"/>
+               android:layout_marginLeft="18dp"/>
 
 
 
@@ -225,11 +233,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--<com.google.android.material.navigation.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/naviView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:menu="@menu/navi_menu" />-->
+        app:menu="@menu/navi_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

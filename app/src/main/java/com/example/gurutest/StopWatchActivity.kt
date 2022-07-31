@@ -27,7 +27,7 @@ class StopWatchActivity : AppCompatActivity() {
 
     var totalTime = 0                       // 총 근무시간(급여에 반영)
     private var isRunning = false           // 실행 여부
-    private var time = 10000                // 근무 시간
+    private var time = 0                // 근무 시간
     private var timerTask: Timer? = null
     private var startTime = ""              // 근무 시작 시간
     private var endTime = ""                // 근무 종료 시간

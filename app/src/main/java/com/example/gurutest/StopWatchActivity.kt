@@ -28,7 +28,7 @@ class StopWatchActivity : AppCompatActivity() {
 
     var totalTime = 0                       // 총 근무시간(급여에 반영)
     private var isRunning = false           // 실행 여부
-    private var time = 0                // 근무 시간
+    private var time = 6000                 // 근무 시간
     private var timerTask: Timer? = null
     private var startTime = ""              // 근무 시작 시간
     private var endTime = ""                // 근무 종료 시간
@@ -250,10 +250,10 @@ class StopWatchActivity : AppCompatActivity() {
         commentTv.text = "퇴근! 수고 많았어요:)"
 
         // 스톱워치 UI 초기화
-        time = 0
-        hourTv.text = "00"
-        minTv.text = "00"
-        secTv.text = "0"
+//        time = 0
+//        hourTv.text = "00"
+//        minTv.text = "00"
+//        secTv.text = "0"
 
         // 총 근무시간을 알려줌
         Toast.makeText(this, "총 근무시간 : $totalTime 분", Toast.LENGTH_SHORT).show()
@@ -328,5 +328,9 @@ class StopWatchActivity : AppCompatActivity() {
         startMin30 = 0
         endMin30 = 0
 
+    }
+
+    override fun onBackPressed() {
+        // super.onBackPressed()
     }
 }

@@ -1,10 +1,11 @@
 package com.example.gurutest
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.database.sqlite.SQLiteDatabase
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -42,7 +43,6 @@ class StopWatchActivity : AppCompatActivity() {
     lateinit var breakBtn: Button
     lateinit var endBtn: Button
     lateinit var backBtn: Button
-    lateinit var deleteDBbtn: Button
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,6 @@ class StopWatchActivity : AppCompatActivity() {
         breakBtn = findViewById(R.id.breakBtn)
         endBtn = findViewById(R.id.endBtn)
         backBtn = findViewById(R.id.backBtn)
-        deleteDBbtn = findViewById(R.id.deleteDBBtn)
 
         dbManager = DBManager(this, "calDB", null, 1)
 
@@ -76,12 +75,74 @@ class StopWatchActivity : AppCompatActivity() {
         }
 
         backBtn.setOnClickListener {
-            var intent = Intent(this, CalenderActivity::class.java)
+            var intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
-        deleteDBbtn.setOnClickListener {
-            remove()
+//        deleteDBbtn.setOnClickListener {
+//            remove()
+//        }
+
+    }
+
+    // 서비스
+    var binder: TimeService.MyBinder? = null
+    var timeService: TimeService? = null
+    var isService = false
+    val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            isService = true
+            binder = service as TimeService.MyBinder
+            binder!!.setTIme(time)
+            timeService = binder!!.gerService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isService = false
+        }
+    }
+
+//    fun serviceBind(view:View) {
+//        bindService(intent, connection, Context.BIND_AUTO_CREATE)
+//    }
+
+    inner class GetCountThread : Runnable {
+
+        private var handler = Handler()
+
+        override fun run() {
+            while(isRunning){
+                if(binder == null){
+                    continue;
+                }
+
+                handler.post(Runnable {
+                    run {
+                        try{
+                            time = binder!!.getTime()
+
+                            val sec = time % 60
+                            var min = time / 60
+                            val hour = min / 60
+                            min -= hour * 60
+
+                            hourTv.text = "%02d".format(hour)
+                            minTv.text = "%02d".format(min)
+                            secTv.text = "%02d".format(sec)
+
+                        } catch(e: RemoteException) {
+                            e.printStackTrace()
+                        }
+                    }
+                })
+
+                try{
+                    Thread.sleep(500)
+                } catch(e: InterruptedException){
+                    e.printStackTrace()
+                }
+            }
         }
 
     }
@@ -89,10 +150,23 @@ class StopWatchActivity : AppCompatActivity() {
     // 근무 시작
     @RequiresApi(Build.VERSION_CODES.O)
     fun start() {
+
+        // 서비스 시작, 바인드 서비스
+        var intent = Intent(this, TimeService::class.java)
+        bindService(intent, connection, BIND_AUTO_CREATE)
+
+//        intent.action = "startForeground"
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            startForegroundService(intent)
+//        }
+
+        // UI 변경 스레드 시작
+        Thread(GetCountThread()).start()
+
         isRunning = true
 
         // 뒤로가기 버튼 안보이게
-        // backBtn.visibility = View.INVISIBLE
+        backBtn.visibility = View.INVISIBLE
 
         // 이미지와 텍스트뷰 변경
         imageView.setImageResource(R.drawable.working)
@@ -112,21 +186,21 @@ class StopWatchActivity : AppCompatActivity() {
         }
 
         // 1초마다 UI 변경
-        timerTask = timer(period = 1000) {
-
-            time++
-
-            val sec = time % 60
-            var min = time / 60
-            val hour = min / 60
-            min -= hour * 60
-
-            runOnUiThread {
-                hourTv.text = "%02d".format(hour)
-                minTv.text = "%02d".format(min)
-                secTv.text = "%02d".format(sec)
-            }
-        }
+//        timerTask = timer(period = 1000) {
+//
+//            time++
+//
+//            val sec = time % 60
+//            var min = time / 60
+//            val hour = min / 60
+//            min -= hour * 60
+//
+//            runOnUiThread {
+//                hourTv.text = "%02d".format(hour)
+//                minTv.text = "%02d".format(min)
+//                secTv.text = "%02d".format(sec)
+//            }
+//        }
     }
     // 휴식
     @RequiresApi(Build.VERSION_CODES.O)
@@ -138,12 +212,16 @@ class StopWatchActivity : AppCompatActivity() {
 
         // 휴식 버튼을 눌렀을 때 근무 중인지 휴식 중인지에 따라 다른 동작
         if(isRunning){
+            // 휴식 끝
             start()
             breakBtn.text = "휴식"
         }
         else{
-            timerTask?.cancel()
-
+            // 휴식
+            //timerTask?.cancel()
+            // 서비스의 time을 저장하고 서비스 종료
+            time = binder!!.getTime()
+            unbindService(connection)
             imageView.setImageResource(R.drawable.working_break)
             commentTv.text = "잠깐 숨 돌리는 시간!"
             breakBtn.text = "휴식 시간 끝"
@@ -153,10 +231,12 @@ class StopWatchActivity : AppCompatActivity() {
     // 퇴근
     @RequiresApi(Build.VERSION_CODES.O)
     private fun reset(){
-        timerTask?.cancel()
+        // 서비스 중지
+        binder!!.setStop(true)
+        //timerTask?.cancel()
 
         // 뒤로가기 버튼 보이게
-        // backBtn.visibility = View.VISIBLE
+        backBtn.visibility = View.VISIBLE
 
         // 총 근무시간, 45분 이상 -> 1시간, 25~44분 -> 30분, 그 이하 -> 0분
         totalTime = when(minTv.text.toString().toInt()){
@@ -195,15 +275,15 @@ class StopWatchActivity : AppCompatActivity() {
     }
 
     // 테스트하느라 생긴 DB 데이터 초기화용 (임시)
-    private fun remove(){
-
-        sqlitedb = dbManager.readableDatabase
-
-        sqlitedb.execSQL("DELETE FROM calTBL")
-        sqlitedb.close()
-        dbManager.close()
-
-    }
+//    private fun remove(){
+//
+//        sqlitedb = dbManager.readableDatabase
+//
+//        sqlitedb.execSQL("DELETE FROM calTBL")
+//        sqlitedb.close()
+//        dbManager.close()
+//
+//    }
 
     // 오늘 임금을 계산하고 DB에 정보를 넣음
     @RequiresApi(Build.VERSION_CODES.O)

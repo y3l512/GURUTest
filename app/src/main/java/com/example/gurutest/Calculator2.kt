@@ -71,6 +71,7 @@ class Calculator2 : AppCompatActivity() {
         //뒤로가기 버튼
         btn_back.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

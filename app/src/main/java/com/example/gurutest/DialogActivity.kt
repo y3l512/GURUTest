@@ -299,6 +299,7 @@ class DialogActivity : AppCompatActivity() {
         backBtn.setOnClickListener {
             var intent = Intent(this, CalenderActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

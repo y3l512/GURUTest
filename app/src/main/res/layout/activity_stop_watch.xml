@@ -24,9 +24,7 @@
         android:layout_width="185dp"
         android:layout_height="195dp"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="140dp"
-        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,32 +58,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="102dp"
-        android:layout_marginBottom="222dp"
+        android:layout_marginBottom="240dp"
         android:text="00"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/yellow"
         android:textSize="70sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sec"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="102dp"
-        android:layout_marginBottom="222dp"
+        android:layout_marginBottom="240dp"
         android:text="00"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/yellow"
         android:textSize="70sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="230dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="248dp"
         android:gravity="center_horizontal|center_vertical"
         android:text=":"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -93,6 +98,7 @@
         android:textSize="70sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/minute"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/hour" />
 
     <TextView
@@ -115,18 +121,5 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <android.widget.Button
-        android:id="@+id/deleteDBBtn"
-        android:layout_width="68dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="10dp"
-        android:background="#D3D3D3"
-        android:text="DB 초기화"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/breakBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

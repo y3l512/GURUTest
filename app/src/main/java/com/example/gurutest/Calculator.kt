@@ -15,10 +15,12 @@ class Calculator : AppCompatActivity() {
 
         btn_back.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         btn_reset.setOnClickListener{
             startActivity(Intent(this, Calculator2::class.java))
+            finish()
         }
 
         //계산 결과 가져오기

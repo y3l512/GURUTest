@@ -96,7 +96,7 @@
         android:id="@+id/imageView2"
         android:layout_width="170dp"
         android:layout_height="190dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.556"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="35dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -205,8 +205,9 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:layout_marginBottom="50dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:background="@drawable/calculator_result"
         android:orientation="vertical"
         android:paddingRight="15dp"
@@ -257,48 +258,6 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="예상 주휴시간"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            //예상 주휴시간
-            <TextView
-                android:id="@+id/holidayworktime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="22dp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="  시간"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -433,23 +392,24 @@
 
     </LinearLayout>
 
-    //설명
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="복리후생비 및 시간외 근로수당, 연차수당 등은 반영되지 않은
-    금액이며 회사규정에 따라 주휴수당도 다르기 때문에 실제 주급/
-    월급과는 차이가 있습니다."
-        android:textColor="#B8B8B8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8"
+        >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 
 
+    //설명
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

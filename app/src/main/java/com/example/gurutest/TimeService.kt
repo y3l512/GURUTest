@@ -86,11 +86,6 @@ class TimeService : Service() {
                 }
             }
 
-//            handler.post(Runnable {
-//                run {
-//                    Toast.makeText(applicationContext, "서비스 종료", Toast.LENGTH_SHORT).show()
-//                }
-//            })
         }
 
     }

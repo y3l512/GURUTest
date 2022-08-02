@@ -41,7 +41,7 @@ class Calculator2 : AppCompatActivity() {
                 holidaypay=0
             }
 
-            //주휴 시간은 아무리 찾아봐도 뭔지 잘모르겠어서 일단 안넣었어요
+
 
             //예상 주급
             var weekpay = hourpay*dayworkhour*weekworkday + holidaypay
@@ -63,7 +63,7 @@ class Calculator2 : AppCompatActivity() {
             }
             else{
                 Toast.makeText(applicationContext,"항목을 전부 입력해주세요!", Toast.LENGTH_SHORT).show()
-                //항목을 입력하지 않았을 때 경고창을 띄우고 싶은데 오류남
+
             }
 
         }

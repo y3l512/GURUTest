@@ -30,8 +30,6 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     lateinit var totalWageTv: TextView
     lateinit var layout: LinearLayout
     lateinit var yearMonDayTv: TextView
-//    lateinit var timeTv: TextView
-//    lateinit var timeTv2: TextView
     lateinit var dayWageTv: TextView
     lateinit var updateBtn: Button
 
@@ -39,14 +37,14 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private var endTime = "0"         // 근무 종료 시간(hour)
     private var startMin30 = 0        // 근무 시작 시간(이 30분 단위인지
     private var endMin30 = 0          // 근무 종료 시간이 30분 단위인지
-    private var startTime2 = "0"      // 하루에 알바를 두 번 했을 경우를 대비한 변수들
+    private var startTime2 = "0"      // 하루에 알바를 두 번 했을 경우를 대비한 변수들(하루에 알바 최대 두개로 가정하고 구현)
     private var endTime2 = "0"
     private var startMin302 = 0
     private var endMin302 = 0
     private var dayWage = 0           // 하루에 번 돈
     private var totalWage = 0         // 이번달에 번 돈
 
-    // 시간 수정 대화상자에 보낼 문자열
+    // UpdateActivity에 인텐트로 보낼 문자열
     private var str_yearMonthDay = ""
     private var str_yearMonth = ""
 
@@ -59,53 +57,45 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         totalWageTv = findViewById(R.id.totalWageTv)
         layout = findViewById(R.id.layout)
         yearMonDayTv = findViewById(R.id.yearMonDayTv)
-//        timeTv = findViewById(R.id.timeTv)
-//        timeTv2 = findViewById(R.id.timeTv2)
         dayWageTv = findViewById(R.id.dayWageTv)
         updateBtn = findViewById(R.id.updateBtn)
 
+        // 아래 날짜별 돈을 표시해주는 레이아웃을 처음에는 보이지 않게함
         layout.visibility = View.GONE
 
         dbManager = DBManager(this, "calDB", null, 1)
 
+        // ↓↓↓이번 달 총액 표시
         var month = ""   // 월
-        var str = ""     // DB 조회 시 사용할 문자열(코드 62줄)
-
-        // 월 두자리 수로 맞추기 (예.07)
+        var str = ""
+        // 오늘 월 두자리 수로 맞추기 (예.07)
         if(LocalDate.now().monthValue < 10){
             month = "0" + LocalDate.now().monthValue
         }else {
             month = LocalDate.now().monthValue.toString()
         }
+        // DB에서 오늘 년,월을 이용해 정보를 검색하기 위한 년,월 문자열
         str = LocalDate.now().year.toString() + month
         str_yearMonth = str
 
-        // 이번 달 번 총액 표시
+        // DB에서 해당 년, 월 정보 가져오기
         sqlitedb = dbManager.readableDatabase
         var cursor: Cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE yearMonth = '" + str + "';", null)
-
         while(cursor.moveToNext()){
+            // 해당 년, 월의 일당을 다 합침
             totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
         }
-
+        // UI  변경
         totalWageTv.text = totalWage.toString()
-
-//        cursor = sqlitedb.rawQuery("SELECT * FROM workTBL;", null)
-//
-//        while(cursor.moveToNext()){
-//            Toast.makeText(applicationContext, cursor.getString(cursor.getColumnIndexOrThrow("name")).toString(),Toast.LENGTH_SHORT).show()
-//            Toast.makeText(applicationContext, cursor.getString(cursor.getColumnIndexOrThrow("wage")).toString(),Toast.LENGTH_SHORT).show()
-//        }
 
         cursor.close()
         sqlitedb.close()
         dbManager.close()
 
-        // 캘린더 뷰 날짜들이 눌렸을 때
-        calenderView.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
-            // 알바를 하루에 두 개 했을 경우를 대비한 두번째 시간 변수를 일단 안보이게 함
-//            timeTv2.visibility = View.GONE
+
+        // 캘린더 뷰 날짜들이 눌렸을 때, 해당 년, 월, 일에 해당하는 정보를 가져옴
+        calenderView.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
             // 월, 일 두자리수로 맞추기(예. 7 -> 07)
             var monthMM = ""
@@ -125,11 +115,12 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 daydd = dayOfMonth.toString()
             }
 
+            // 년, 월, 일 문자열
             str_yearMonthDay = year.toString() + monthMM + daydd
 
-            // DB에서 정보 조회
+            // DB에서 정보 조회 (해당 년, 월, 일)
             sqlitedb = dbManager.readableDatabase
-            var cursor: Cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE date = '" + year.toString() + monthMM + daydd + "';", null)
+            var cursor: Cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE date = '" + str_yearMonthDay + "';", null)
 
             var i = 0
             while(cursor.moveToNext()){
@@ -140,7 +131,6 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     startMin30 = cursor.getString(cursor.getColumnIndexOrThrow("startMin30")).toInt()
                     endMin30 = cursor.getString(cursor.getColumnIndexOrThrow("endMin30")).toInt()
                 }else{
-//                    timeTv2.visibility = View.VISIBLE
                     startTime2 = cursor.getString(cursor.getColumnIndexOrThrow("startTime")).toString()
                     endTime2 = cursor.getString(cursor.getColumnIndexOrThrow("endTime")).toString()
                     startMin302 = cursor.getString(cursor.getColumnIndexOrThrow("startMin30")).toInt()
@@ -157,38 +147,9 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             dbManager.close()
 
             // UI 업데이트
-            layout.visibility = View.VISIBLE
+            layout.visibility = View.VISIBLE   // 액티비티 실행 시 안보이게 했던 레이아웃을 이제는 보이게 함
             yearMonDayTv.text = "$year 년 ${month+1}월 $dayOfMonth 일"
             dayWageTv.text = dayWage.toString() + "원"
-
-            // 일한 시간 텍스트 초기화
-//            if(startMin30 == 1){
-//                if(endMin30 == 1){
-//                    timeTv.text = startTime + "시 30분 - " + endTime + "시 30분"
-//                }else {
-//                    timeTv.text = startTime + "시 30분 - " + endTime + "시"
-//                }
-//            }else {
-//                if(endMin30 == 1){
-//                    timeTv.text = startTime + "시 - " + endTime + "시 30분"
-//                }else {
-//                    timeTv.text = startTime + "시 - " + endTime + "시"
-//                }
-//            }
-//
-//            if(startMin302 == 1){
-//                if(endMin302 == 1){
-//                    timeTv2.text = startTime2 + "시 30분 - " + endTime2 + "시 30분"
-//                }else {
-//                    timeTv2.text = startTime2 + "시 30분 - " + endTime2 + "시"
-//                }
-//            }else {
-//                if(endMin302 == 1){
-//                    timeTv2.text = startTime2 + "시 - " + endTime2 + "시 30분"
-//                }else {
-//                    timeTv2.text = startTime2 + "시 - " + endTime2 + "시"
-//                }
-//            }
 
             // 변수 초기화
             startTime = "0"
@@ -198,20 +159,24 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             dayWage = 0
         }
 
+        // 수정 버튼 클릭 시
         updateBtn.setOnClickListener {
             if(layout.visibility == View.VISIBLE){
 
-                var intent = Intent(this, DialogActivity::class.java)
+                // UpdateActivity에 인텐트를 보냄
+                var intent = Intent(this, UpdateActivity::class.java)
                 intent.putExtra("yearMonthDay", str_yearMonthDay)
                 intent.putExtra("yearMonth", str_yearMonth)
                 startActivity(intent)
             }
         }
 
+        // 메뉴 버튼을 눌렀을 시
         btn_navi.setOnClickListener{
             layout_drawer.openDrawer(GravityCompat.END)
         }
 
+        // 메인 화면(근무 목록)으로 이동 버튼 눌렀을 시
         btn_main.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
         }
@@ -227,7 +192,6 @@ class CalenderActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         {
             //시급 계산기로
             R.id.calculator-> startActivity(Intent(this, Calculator2::class.java))
-
 
         }
         layout_drawer.closeDrawers()

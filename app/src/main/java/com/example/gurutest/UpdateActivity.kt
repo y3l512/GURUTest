@@ -9,13 +9,13 @@ import android.view.View
 import android.widget.*
 import com.example.gurutest.R
 
-// 대화상자로 구현하려다가
-class DialogActivity : AppCompatActivity() {
+// 근무 시간 수정 액티비티
+class UpdateActivity : AppCompatActivity() {
 
     lateinit var dbManager: DBManager
     lateinit var sqlitedb: SQLiteDatabase
 
-    // 시간
+    // 수정 된 시간을 담을 변수들
     var updateStartTime1 = ""
     var updateEndTime1 = ""
     var updateStartMin301 = 0
@@ -28,6 +28,8 @@ class DialogActivity : AppCompatActivity() {
     var workName2 = ""
     var workWage1 = 0
     var workWage2 = 0
+
+    // 수정 전 일당을 담을 변수
     var originalWage1 = 0
     var originalWage2 = 0
 
@@ -53,7 +55,7 @@ class DialogActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dialog)
+        setContentView(R.layout.activity_update)
 
         layoutInDialog1 = findViewById(R.id.layoutInDialog1)
         layoutInDialog2 = findViewById(R.id.layoutInDialog2)
@@ -75,22 +77,21 @@ class DialogActivity : AppCompatActivity() {
         dayWageTv1 = findViewById(R.id.dayWage1)
         dayWageTv2 = findViewById(R.id.dayWage2)
 
-        // 레이아웃 초기화
+        // 두번째 레이아웃은 처음에 보이지 않게 함
         layoutInDialog2.visibility = View.GONE
 
         dbManager = DBManager(this, "calDB", null, 1)
 
-        // 인텐트 정보 읽어오기
+        // 인텐트 정보 읽어오기(DB 검색, 입력 시 사용)
         var str_yearMonthDay = intent.getStringExtra("yearMonthDay")
         var str_yearMonth = intent.getStringExtra("yearMonth")
 
-        // DB로 정보 읽어오기
+        // DB로 정보 읽어오기(년, 월, 일)
         sqlitedb = dbManager.readableDatabase
         var cursor: Cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE date = '" + str_yearMonthDay + "';", null)
-
         var i = 0
+        // DB의 정보를 읽어옴(하루에 최대 알바 2개)
         while(cursor.moveToNext()){
-            // DB의 정보를 읽어옴(하루에 최대 알바 2개)
             if(i == 0){
                 workName1 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
                 workWage1 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
@@ -100,6 +101,7 @@ class DialogActivity : AppCompatActivity() {
                 updateEndMin301 = cursor.getString(cursor.getColumnIndexOrThrow("endMin30")).toInt()
                 originalWage1 = cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
             }else{
+                // 알바가 두 개일 시 보이지 않게 했던 레이아웃 보이게 함
                 layoutInDialog2.visibility = View.VISIBLE
                 workName2 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
                 workWage2 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
@@ -117,11 +119,12 @@ class DialogActivity : AppCompatActivity() {
         sqlitedb.close()
         dbManager.close()
 
-        // 근무지명 바꾸기
+        // 근무지명 텍스트 변경
         nameTv1.text = workName1
         nameTv2.text = workName2
 
-        // 근무지 급여 바꾸기(하루 단위)
+        // 금액 텍스트 바꾸기 (일당)
+        // 데이터가 있는 경우엔 일당 계산, 데이터가 없는 경우엔 0원으로 표시
         if(updateStartTime1 != ""){
             dayWageTv1.text = "" + dayWage(workWage1, updateStartTime1, updateEndTime1, updateStartMin301, updateEndMin301) + "원"
         }else{ dayWageTv1.text = "0원" }
@@ -129,7 +132,8 @@ class DialogActivity : AppCompatActivity() {
             dayWageTv2.text = "" + dayWage(workWage2, updateStartTime2, updateEndTime2, updateStartMin302, updateEndMin302) + "원"
         }else{ dayWageTv2.text = "0원" }
 
-        // EditText 힌트 값 바꾸기 (수정 전 시간)
+        // EditText 힌트 값 바꾸기 (수정 전 DB에 들어있는 근무 시간)
+        // 첫번째 아르바이트 변수들
         if(updateStartTime1 == ""){
             hourEdit1_1.hint = "0"
         }else { hourEdit1_1.hint = updateStartTime1 }
@@ -143,7 +147,7 @@ class DialogActivity : AppCompatActivity() {
             minEdit1_2.hint = "30"
         }else { minEdit1_2.hint = "0" }
 
-
+        // 두번째 아르바이트 변수들
         if(updateStartTime2 == ""){
             hourEdit2_1.hint = "0"
         }else { hourEdit2_1.hint = updateStartTime2 }
@@ -157,12 +161,13 @@ class DialogActivity : AppCompatActivity() {
             minEdit2_2.hint = "30"
         }else { minEdit2_2.hint = "0" }
 
+
+        // 수정버튼이 눌렸을 시
         updatebtn1.setOnClickListener {
 
-            // 에디트 텍스트 값 읽어오기
+            // 업데이트 될 시간 읽어오기
             updateStartTime1 = hourEdit1_1.text.toString()
             updateEndTime1 = hourEdit1_2.text.toString()
-
             if(minEdit1_1.text.toString() == "30"){
                 updateStartMin301 = 1
             }else if(minEdit1_1.text.toString() == "0" || minEdit1_1.text.toString() == "00"){
@@ -186,7 +191,6 @@ class DialogActivity : AppCompatActivity() {
 
             // DB 수정
             sqlitedb = dbManager.writableDatabase
-
             // 키 값이 없어서 같은 날 알바가 두개면 둘 다 삭제될 것이므로 다시 두개 다 입력
             sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
 
@@ -206,12 +210,12 @@ class DialogActivity : AppCompatActivity() {
         }
 
 
+        // 수정버튼이 눌렸을 시(updatebtn1과 동작은 똑같고 변수만 다름)
         updatebtn2.setOnClickListener {
 
-            // 에디트 텍스트 값 읽어오기
+            // 업데이트 될 시간 읽어오기
             updateStartTime2 = hourEdit2_1.text.toString()
             updateEndTime2 = hourEdit2_2.text.toString()
-
             if(minEdit2_1.text.toString() == "30"){
                 updateStartMin302 = 1
             }else if(minEdit2_1.text.toString() == "0" || minEdit2_1.text.toString() == "00"){
@@ -235,7 +239,6 @@ class DialogActivity : AppCompatActivity() {
 
             // DB 수정
             sqlitedb = dbManager.writableDatabase
-
             // 키 값이 없어서 같은 날 알바가 두개면 둘 다 삭제될 것이므로 다시 두개 다 입력
             sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
 
@@ -255,48 +258,9 @@ class DialogActivity : AppCompatActivity() {
 
         }
 
-
-//        deletebtn1.setOnClickListener {
-//
-//            sqlitedb = dbManager.writableDatabase
-//
-//            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
-//            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName2 + "', " + workWage2 + ", '" + str_yearMonthDay
-//                    + "', '" + str_yearMonth
-//                    + "', '" + updateStartTime2 + "', '" + updateEndTime2 + "', " + updateStartMin302 + ", " + updateEndMin302 + ", " + originalWage2 + ");")
-//
-//
-//            sqlitedb.close()
-//            dbManager.close()
-//
-//            hourEdit1_1.hint = "00"
-//            hourEdit1_2.hint = "00"
-//            minEdit1_1.hint = "00"
-//            minEdit1_2.hint = "00"
-//
-//            Toast.makeText(applicationContext, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
-//            //layoutInDialog1.visibility = View.INVISIBLE
-//        }
-//
-//
-//        deletebtn2.setOnClickListener {
-//
-//            sqlitedb = dbManager.writableDatabase
-//
-//            sqlitedb.execSQL("DELETE FROM calTBL WHERE date = '" + str_yearMonthDay + "';")
-//            sqlitedb.execSQL("INSERT INTO calTBL VALUES ('" + workName1 + "', " + workWage1 + ", '" + str_yearMonthDay
-//                    + "', '" + str_yearMonth
-//                    + "', '" + updateStartTime1 + "', '" + updateEndTime1 + "', " + updateStartMin301 + ", " + updateEndMin301 + ", " + originalWage1 + ");")
-//
-//            sqlitedb.close()
-//            dbManager.close()
-//
-//            Toast.makeText(applicationContext, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
-//            //layoutInDialog2.visibility = View.INVISIBLE
-//        }
-
-
+        // 뒤로가기 버튼 클릭 시
         backBtn.setOnClickListener {
+            // 캘린더 액티비티로 이동
             var intent = Intent(this, CalenderActivity::class.java)
             startActivity(intent)
             finish()
@@ -306,9 +270,10 @@ class DialogActivity : AppCompatActivity() {
     // 일바 급여 계산 (일당)
     private fun dayWage(hourWage: Int, updateStartTime: String, updateEndTime: String
                         , updateStartMin30: Int, updateEndMin30: Int): Int {
-        var todayWage = 0
-        var workHour = 0
-        var workMin = 0
+
+        var todayWage = 0     // 일당
+        var workHour = 0      // 일한 시간
+        var workMin = 0       // 일한 시간(분)
 
         // 시간 계산
         if((updateEndTime.toInt() - updateStartTime.toInt()) >= 0){
@@ -327,6 +292,7 @@ class DialogActivity : AppCompatActivity() {
             workMin = 1
         }
 
+        // 일당 계산
         if(workMin == 0){
             todayWage = workHour * hourWage
         }else if(workMin == 30) {
@@ -336,6 +302,7 @@ class DialogActivity : AppCompatActivity() {
             todayWage = workHour*hourWage - hourWage/2
         }
 
+        // 일당 반환
         return todayWage
     }
 }

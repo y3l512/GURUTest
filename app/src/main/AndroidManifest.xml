@@ -34,7 +34,7 @@
         <activity android:name=".Calculator2" />
         <activity android:name=".StopWatchActivity" />
         <activity android:name=".CalenderActivity" />
-        <activity android:name=".DialogActivity" />
+        <activity android:name=".UpdateActivity" />
     </application>
 
 </manifest>

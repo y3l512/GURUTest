@@ -70,16 +70,18 @@ class NewJob : AppCompatActivity() {
 
         //등록 완료 (근무지 정보 메인으로 보냄)
         btn_fin.setOnClickListener{
+            // 근무지와 시급 읽어오기
             val workname = et_workname.text.toString()
             val wage = et_wage.text.toString().toInt()
 
+            // DB에 근무지와 시급을 입력
             sqlitedb = dbManager.writableDatabase
-
             sqlitedb.execSQL("INSERT INTO workTBL VALUES ('" + workname + "', " + wage + ");")
 
             sqlitedb.close()
             dbManager.close()
 
+            // 메인 액티비티로 이동
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

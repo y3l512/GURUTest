@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var work_totalWage1: TextView
     lateinit var work_totalWage2: TextView
 
-    private var t_workname1 = ""
+    private var t_workname1 = ""     // 근무지명
     private var t_workname2 = ""
-    private var t_wage1 = 0
+    private var t_wage1 = 0          // 근무지 시급
     private var t_wage2 = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -51,12 +51,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         work_totalWage1 = findViewById(R.id.work_totalWage1)
         work_totalWage2 = findViewById(R.id.work_totalWage2)
 
+        // 처음에는 근무지 레이아웃 안보이게
         lay_panel1.visibility = View.INVISIBLE
         lay_panel2.visibility = View.INVISIBLE
 
-        // 근무 스톱워치 실행
+        // 근무 스톱워치 실행 -> 스톱워치로 이동
         btn_gowork1.setOnClickListener {
             var intent = Intent(this, StopWatchActivity::class.java)
+            // 인텐트에 근무지명 정보 전달
             intent.putExtra("name", tv_workname1.text.toString())
             startActivity(intent)
         }
@@ -90,26 +92,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val ab = supportActionBar!!
         ab.setDisplayShowTitleEnabled(false)
 
-
-        //새 알바에서 근무지를 등록했을때 항목이 추가됨
-//        if(intent.hasExtra("workname")){
-            //근무지 이름 가져오기
-//            val str_workname = intent.getStringExtra("workname")
-//            val str_wage = intent.getStringExtra("wage")
-
-//        }
-
-
-
-        //val tv_paysum =0 // 총 번돈 표시
-
-
         // 메인 화면 총액 표시
         dbManager = DBManager(this, "calDB", null, 1)
 
-        var month = "00"
+        var month = "00"        // 월
         var str = ""
-        var totalWage = 0
+        var totalWage = 0       // 일당
 
         // 월 두자리 수로 맞추기 (예.07)
         if(LocalDate.now().monthValue < 10){
@@ -117,23 +105,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }else {
             month = LocalDate.now().monthValue.toString()
         }
-        str = LocalDate.now().year.toString() + month
+        str = LocalDate.now().year.toString() + month    // 년, 월
 
-        // 이번 달 번 총액 표시
+        // 이번 달 번 총액 표시 (년, 월을 이용해 DB 조회)
         sqlitedb = dbManager.readableDatabase
         var cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE yearMonth = '" + str + "';", null)
-
         while(cursor.moveToNext()){
+            // 해당 년, 월의 일당을 다 더함
             totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
         }
+        // UI 변경
         mainWageTv.text = totalWage.toString()
 
-        // 알바 패널에 정보 표시
+        // 알바 패널에 정보 표시 (근무지명)
         cursor = sqlitedb.rawQuery("SELECT * FROM workTBL;", null)
-
         var i =0
         while(cursor.moveToNext()){
+            // 알바를 최대 2개라고 가정해서 알바별로 다른 변수에 정보를 담음
             if(i==0){
+                // 근무지명, 시급을 읽어옴
                 t_workname1 = cursor.getString(cursor.getColumnIndexOrThrow("name")).toString()
                 tv_workname1.text = t_workname1
                 t_wage1 = cursor.getString(cursor.getColumnIndexOrThrow("wage")).toInt()
@@ -158,9 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // 첫번째 근무지 총액
         cursor = sqlitedb.rawQuery("SELECT * FROM calTBL WHERE yearMonth = '" + str + "' AND name = '" + tv_workname1.text.toString() + "';", null)
         while(cursor.moveToNext()){
+            // 해당하는 DB의 일당을 다 더함
             work_totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
         }
-
         // 텍스트뷰 변경
         work_totalWage1.text = "$work_totalWage" + "원"
         // 초기화
@@ -171,7 +161,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         while(cursor.moveToNext()){
             work_totalWage += cursor.getString(cursor.getColumnIndexOrThrow("dayWage")).toInt()
         }
-
         // 텍스트뷰 변경
         work_totalWage2.text = "$work_totalWage" + "원"
         // 초기화
@@ -181,11 +170,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sqlitedb.close()
         dbManager.close()
 
-        // 삭제 버튼
+        // 삭제 버튼 클릭 시
         btn_delete1.setOnClickListener {
 
+            // 근무지 이름
             var name = tv_workname1.text.toString()
 
+            // 테이블에서 해당 근무지 정보를 삭제
             sqlitedb = dbManager.writableDatabase
             sqlitedb.execSQL("DELETE FROM workTBL WHERE name = '" + name + "';")
             sqlitedb.execSQL("DELETE FROM calTBL WHERE name = '" + name + "';")
@@ -193,14 +184,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             sqlitedb.close()
             dbManager.close()
 
+            // 해당 레이아웃을 안보이게
             lay_panel1.visibility = View.GONE
         }
 
-        // 삭제 버튼
+        // 삭제 버튼 클릭 시
         btn_delete2.setOnClickListener {
 
+            // 근무지 이름
             var name = tv_workname2.text.toString()
 
+            // 테이블에서 해당 근무지 정보를 삭제
             sqlitedb = dbManager.writableDatabase
             sqlitedb.execSQL("DELETE FROM workTBL WHERE name = '" + name + "';")
             sqlitedb.execSQL("DELETE FROM calTBL WHERE name = '" + name + "';")
@@ -208,6 +202,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             sqlitedb.close()
             dbManager.close()
 
+            // 해당 레이아웃을 안보이게
             lay_panel2.visibility = View.GONE
 
         }
